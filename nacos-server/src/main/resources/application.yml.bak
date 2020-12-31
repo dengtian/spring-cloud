@@ -1,0 +1,95 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: nacos-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      enabled: true
+      transport:
+        dashboard: 127.0.0.1:8080
+  datasource:
+    name: sp
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://127.0.0.1:3306/cloud?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: log-consumer-group
+      enable-auto-commit: true
+      auto-commit-interval: 1000
+    producer:
+      acks: 0
+  redis:
+    host: 127.0.0.1
+    database: 0
+    port: 6379
+  cache:
+    type: redis
+
+
+
+mybatis-plus:
+  #  global-config:
+  #    db-config:
+  #      logic-delete-field: deleted
+  #      logic-not-delete-value: 0
+  #      logic-delete-value: 1
+  type-enums-package: com.cloud.nacosserver.enums
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  page-size-zero: true
+  params: count=countSql
+
+
+
+logging:
+  file:
+    path: E:\logs\cloud
+
+log:
+  kafka:
+    topic: content_log
+
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: linkedhashmap
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson
+      valueEncoder: java
+      valueDecoder: java
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        maxTotal: 50
+      host: 127.0.0.1
+      port: 6379
+      expireAfterWriteInMillis: 600000
